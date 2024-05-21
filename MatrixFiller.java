@@ -29,21 +29,24 @@ public class MatrixFiller extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Indica que o programa encerra ao quando o usuario clicar no botão de fechar
         setLayout(new BorderLayout()); //Define o gerenciador de layout... 5 areas de componentes (Norte, Sul, Leste, Oeste e centro)
+
         matrixData = new HashMap<>(); //Iniciação do HashMap
 
         //Painel da matriz
-        JPanel matrixPanel = new JPanel(new GridLayout(numRows, numCols));
-        matrixLabels = new JLabel[numRows][numCols];
+        JPanel matrixPanel = new JPanel(new GridLayout(numRows, numCols)); //Criação de um painel com layout de grade (grid), ele organiza em linhas e colunas
+        matrixLabels = new JLabel[numRows][numCols]; //Apenas criando uma matriz do tipo JLabel
+
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                matrixLabels[i][j] = new JLabel("[ ]", SwingConstants.CENTER);
-                matrixLabels[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                matrixPanel.add(matrixLabels[i][j]);
+                matrixLabels[i][j] = new JLabel("[ ]", SwingConstants.CENTER); //Criando o bjeto dentro da matriz e definindo como '[ ]' e o segundo argumento especifica que deve ser centralizado horizontalmente dentro do rotulo
+                matrixLabels[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));//Apenas a borda
+                matrixPanel.add(matrixLabels[i][j]); //Aqui você está adicionando o rótulo atual ao painel...Isso coloca o rótulo na posição correspondente na grade.
             }
         }
-        add(matrixPanel, BorderLayout.CENTER);
 
-        // Painel de entrada
+        add(matrixPanel, BorderLayout.CENTER); //Voce está adicionando o painel (matrixPainel) ao MatrixFiller (JFrame)
+
+        //Painel de entrada
         JPanel inputPanel = new JPanel(new GridLayout(4, 2));
 
         coordInputField = new JTextField(5);
@@ -127,10 +130,10 @@ public class MatrixFiller extends JFrame {
                         matrixLabels[x][y].setText("[ ]");
                         String state = getStateFromPlate(carInfo.getPlate());
 
-                        // Calculando tempo de permanência
+                        //Calculando tempo de permanencia
                         long parkingTime = calculateParkingTime(carInfo.getTime());
 
-                        // Calculando valor a ser cobrado
+                        //Calculando valor a ser cobrado
                         double totalCharge = calculateParkingCharge(parkingTime);
 
                         statusLabel.setText("Posição limpa: (" + x + "," + y + "). Carro de " + state + " com placa " + carInfo.getPlate() + " e horário " + carInfo.getTime() +
@@ -168,22 +171,22 @@ public class MatrixFiller extends JFrame {
 
     private long calculateParkingTime(String entryTime) {
         //Podemos utilizar também a função now()
-        LocalTime entry = LocalTime.parse(entryTime.split(" a ")[0]); // Esse pega a primeira parte da String, HORA ENTRADA
+        LocalTime entry = LocalTime.parse(entryTime.split(" a ")[0]); //Esse pega a primeira parte da String, HORA ENTRADA
         LocalTime exit = LocalTime.parse(entryTime.split(" a ")[1]); //Esse pega a segunda parte da String, HORA SAIDA
         return Duration.between(entry, exit).toMinutes(); //Função utilizada para calcular a diferença entre dois objetos LocalTime
     }
 
     private double calculateParkingCharge(long parkingTime) {
-        final double INITIAL_RATE = 3.00; // Valor incial a ser pago por permanencia de 3 horas, 3 minutos
+        final double INITIAL_RATE = 3.00; //Valor incial a ser pago por permanencia de 3 horas, 3 minutos
         final double ADDITIONAL_RATE_PER_HOUR = 1.50; // Valor incial a cada hora ou fração de hora, depois das 3 horas
 
         if (parkingTime <= 15) {
             return 0.0; // Aqui é a tolerancia de 15 minutos
         } else if (parkingTime <= 180) {
-            return INITIAL_RATE; // Aqui é permanencia até 3 horas (180 minutos)
+            return INITIAL_RATE; //Aqui é permanencia até 3 horas (180 minutos)
         } else {
-            long additionalHours = (parkingTime - 180 + 59) / 60; // Arredonda para cima, função teto** (adicionamos 59, justamente para ter a função teto), long pega a parte inteira.
-            return INITIAL_RATE + additionalHours * ADDITIONAL_RATE_PER_HOUR; // Retorna o valor a se pagar
+            long additionalHours = (parkingTime - 180 + 59) / 60; //Arredonda para cima, função teto** (adicionamos 59, justamente para ter a função teto), long pega a parte inteira.
+            return INITIAL_RATE + additionalHours * ADDITIONAL_RATE_PER_HOUR; //Retorna o valor a se pagar
         }
     }
 
